@@ -3,3 +3,4 @@
 
 export const SITE_TITLE = 'ErgoFresco';
 export const SITE_DESCRIPTION = 'Stay cool. Work better. Ergonomics and cooling gear for remote workers in warm climates.';
+export const GA_MEASUREMENT_ID = 'G-TPT17EVSNK';
