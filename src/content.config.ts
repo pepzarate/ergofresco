@@ -8,12 +8,15 @@ const blog = defineCollection({
 	// Type-check frontmatter using a schema
 	schema: ({ image }) =>
 		z.object({
-			title: z.string(),
-			description: z.string(),
+			title: z.string().max(70),
+			description: z.string().max(160),
 			// Transform string to Date object
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
+			category: z.enum(['cooling', 'ergonomics', 'reviews']).optional(),
+			featured: z.boolean().default(false), // para destacar artículos en home
+			affiliate: z.boolean().default(true), // muestra disclaimer automáticamente
 		}),
 });
 
