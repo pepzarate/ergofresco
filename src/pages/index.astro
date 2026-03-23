@@ -1,71 +1,483 @@
 ---
-import BaseHead from "../components/common/BaseHead.astro";
-import Footer from "../components/common/Footer.astro";
-import Header from "../components/common/Header.astro";
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+
+const posts = (await getCollection("blog"))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+
+const painPoints = [
+	{
+		icon: "🌡️",
+		title: "Heat kills focus",
+		description:
+			"Studies show productivity drops up to 18% when your workspace is too warm. Most home offices have zero climate control strategy.",
+	},
+	{
+		icon: "🪑",
+		title: "Wrong gear hurts",
+		description:
+			"Back pain, wrist strain, and neck stiffness are the hidden cost of cheap home office furniture. The right ergonomic setup pays for itself.",
+	},
+	{
+		icon: "😓",
+		title: "No one tests this",
+		description:
+			"Most product reviews ignore climate. We specifically test cooling and ergonomic gear for warm environments, so you buy right the first time.",
+	},
+];
+
+const categories = [
+	{
+		slug: "cooling",
+		label: "Cooling",
+		icon: "🧊",
+		description: "Fans, AC units, cooling pads, and more.",
+	},
+	{
+		slug: "ergonomics",
+		label: "Ergonomics",
+		icon: "🪑",
+		description: "Chairs, desks, monitors, and accessories.",
+	},
+	{
+		slug: "reviews",
+		label: "Reviews",
+		icon: "⭐",
+		description: "Honest, tested product reviews.",
+	},
+];
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog
-				starter template. This template serves as a lightweight, minimally-styled
-				starting point for anyone looking to build a personal website, blog,
-				or portfolio with Astro.
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<!-- ─── Hero ──────────────────────────────────────────────── -->
+	<section class="hero">
+		<div class="container">
+			<div class="hero-badge">🧊 For remote workers in warm climates</div>
+			<h1 class="hero-headline">
+				Work Cool.<br />Work Better.
+			</h1>
+			<p class="hero-sub">
+				Honest reviews of ergonomic chairs, desk fans, and cooling gear
+				— so you can build the home office you actually want to sit in.
 			</p>
-			<p>
-				This template comes with a few integrations already configured
-				in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a
-				> to add tools like Tailwind, React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>
-					Edit the site header items in <code
-						>src/components/Header.astro</code
-					>
-				</li>
-				<li>
-					Add your name to the footer in <code
-						>src/components/Footer.astro</code
-					>
-				</li>
-				<li>
-					Check out the included blog posts in <code
-						>src/content/blog/</code
-					>
-				</li>
-				<li>
-					Customize the blog post page layout in <code
-						>src/layouts/BlogPost.astro</code
-					>
-				</li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask
-				questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check
-				out
-				<a href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template</a
-				>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+			<div class="hero-actions">
+				<a href="/blog" class="btn-primary">Browse Articles</a>
+				<a href="#categories" class="btn-ghost">Explore Topics →</a>
+			</div>
+		</div>
+		<div class="hero-glow" aria-hidden="true"></div>
+	</section>
+
+	<!-- ─── Pain Points ───────────────────────────────────────── -->
+	<section class="pain-points">
+		<div class="container">
+			<h2 class="section-title">
+				We get it. Working hot is working hard.
+			</h2>
+			<div class="pain-grid">
+				{
+					painPoints.map((point) => (
+						<div class="pain-card">
+							<span class="pain-icon">{point.icon}</span>
+							<h3>{point.title}</h3>
+							<p>{point.description}</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- ─── Categories ────────────────────────────────────────── -->
+	<section class="categories" id="categories">
+		<div class="container">
+			<h2 class="section-title">What are you looking for?</h2>
+			<div class="cat-grid">
+				{
+					categories.map((cat) => (
+						<a href={`/blog?category=${cat.slug}`} class="cat-card">
+							<span class="cat-icon">{cat.icon}</span>
+							<div>
+								<strong>{cat.label}</strong>
+								<p>{cat.description}</p>
+							</div>
+							<span class="cat-arrow">→</span>
+						</a>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- ─── Featured Articles ─────────────────────────────────── -->
+	{
+		posts.length > 0 && (
+			<section class="featured">
+				<div class="container">
+					<div class="section-header">
+						<h2 class="section-title">Latest Articles</h2>
+						<a href="/blog" class="see-all">
+							See all →
+						</a>
+					</div>
+					<div class="posts-grid">
+						{posts.map((post) => (
+							<a href={`/blog/${post.id}/`} class="post-card">
+								<div class="post-meta">
+									<time
+										datetime={post.data.pubDate.toISOString()}
+									>
+										{post.data.pubDate.toLocaleDateString(
+											"en-US",
+											{
+												year: "numeric",
+												month: "short",
+												day: "numeric",
+											},
+										)}
+									</time>
+								</div>
+								<h3>{post.data.title}</h3>
+								<p>{post.data.description}</p>
+								<span class="read-more">Read article →</span>
+							</a>
+						))}
+					</div>
+				</div>
+			</section>
+		)
+	}
+</BaseLayout>
+
+<style>
+	/* ─── Shared ─────────────────────────────────────────────── */
+	.container {
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 0 1.5rem;
+	}
+
+	.section-title {
+		font-size: clamp(1.5rem, 3vw, 2rem);
+		margin-bottom: 2.5rem;
+		color: var(--text);
+	}
+
+	.section-header {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		margin-bottom: 2.5rem;
+		gap: 1rem;
+	}
+
+	.section-header .section-title {
+		margin-bottom: 0;
+	}
+
+	.see-all {
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--accent);
+		white-space: nowrap;
+		transition: color 0.15s ease;
+	}
+
+	.see-all:hover {
+		color: var(--accent-dark);
+	}
+
+	/* ─── Hero ───────────────────────────────────────────────── */
+	.hero {
+		position: relative;
+		padding: 6rem 0 5rem;
+		overflow: hidden;
+		text-align: center;
+	}
+
+	.hero-glow {
+		position: absolute;
+		top: -100px;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 600px;
+		height: 400px;
+		background: radial-gradient(
+			ellipse,
+			rgba(14, 165, 233, 0.12) 0%,
+			transparent 70%
+		);
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	.hero .container {
+		position: relative;
+		z-index: 1;
+	}
+
+	.hero-badge {
+		display: inline-block;
+		font-size: 0.8rem;
+		font-weight: 600;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--accent);
+		background: var(--accent-soft);
+		border: 1px solid var(--accent);
+		border-radius: 99px;
+		padding: 0.3rem 1rem;
+		margin-bottom: 1.75rem;
+	}
+
+	.hero-headline {
+		font-size: clamp(3rem, 8vw, 5.5rem);
+		line-height: 1.05;
+		letter-spacing: -0.03em;
+		color: var(--text);
+		margin-bottom: 1.5rem;
+	}
+
+	.hero-sub {
+		font-size: clamp(1rem, 2vw, 1.2rem);
+		color: var(--text-muted);
+		max-width: 560px;
+		margin: 0 auto 2.5rem;
+		line-height: 1.65;
+	}
+
+	.hero-actions {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.btn-primary {
+		display: inline-block;
+		background: var(--accent);
+		color: #fff;
+		font-weight: 600;
+		font-size: 0.95rem;
+		padding: 0.75rem 1.75rem;
+		border-radius: 8px;
+		text-decoration: none;
+		transition:
+			background 0.15s ease,
+			transform 0.1s ease;
+	}
+
+	.btn-primary:hover {
+		background: var(--accent-dark);
+		color: #fff;
+		transform: translateY(-1px);
+	}
+
+	.btn-ghost {
+		display: inline-block;
+		color: var(--text-muted);
+		font-weight: 600;
+		font-size: 0.95rem;
+		padding: 0.75rem 1.25rem;
+		border-radius: 8px;
+		text-decoration: none;
+		transition:
+			color 0.15s ease,
+			background 0.15s ease;
+	}
+
+	.btn-ghost:hover {
+		color: var(--text);
+		background: var(--bg-subtle);
+	}
+
+	/* ─── Pain Points ─────────────────────────────────────────── */
+	.pain-points {
+		padding: 5rem 0;
+		background: var(--bg-subtle);
+		border-top: 1px solid var(--border);
+		border-bottom: 1px solid var(--border);
+	}
+
+	.pain-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.pain-card {
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		border-radius: 16px;
+		padding: 2rem;
+		transition:
+			border-color 0.15s ease,
+			transform 0.15s ease;
+	}
+
+	.pain-card:hover {
+		border-color: var(--accent);
+		transform: translateY(-2px);
+	}
+
+	.pain-icon {
+		font-size: 2rem;
+		display: block;
+		margin-bottom: 1rem;
+		line-height: 1;
+	}
+
+	.pain-card h3 {
+		font-size: 1.15rem;
+		margin-bottom: 0.6rem;
+		color: var(--text);
+	}
+
+	.pain-card p {
+		font-size: 0.9rem;
+		color: var(--text-muted);
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	/* ─── Categories ──────────────────────────────────────────── */
+	.categories {
+		padding: 5rem 0;
+	}
+
+	.cat-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: 1rem;
+	}
+
+	.cat-card {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		border-radius: 14px;
+		padding: 1.5rem;
+		text-decoration: none;
+		color: var(--text);
+		transition:
+			border-color 0.15s ease,
+			transform 0.15s ease,
+			background 0.15s ease;
+	}
+
+	.cat-card:hover {
+		border-color: var(--accent);
+		background: var(--accent-soft);
+		color: var(--text);
+		transform: translateY(-2px);
+	}
+
+	.cat-icon {
+		font-size: 1.75rem;
+		flex-shrink: 0;
+		line-height: 1;
+	}
+
+	.cat-card strong {
+		display: block;
+		font-size: 1rem;
+		font-weight: 700;
+		margin-bottom: 0.2rem;
+		font-family: "Fraunces", serif;
+	}
+
+	.cat-card p {
+		font-size: 0.82rem;
+		color: var(--text-muted);
+		margin: 0;
+		line-height: 1.4;
+	}
+
+	.cat-arrow {
+		margin-left: auto;
+		color: var(--text-muted);
+		font-size: 1.1rem;
+		transition:
+			transform 0.15s ease,
+			color 0.15s ease;
+		flex-shrink: 0;
+	}
+
+	.cat-card:hover .cat-arrow {
+		transform: translateX(4px);
+		color: var(--accent);
+	}
+
+	/* ─── Featured Articles ───────────────────────────────────── */
+	.featured {
+		padding: 5rem 0;
+		background: var(--bg-subtle);
+		border-top: 1px solid var(--border);
+	}
+
+	.posts-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.25rem;
+	}
+
+	.post-card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		background: var(--bg-card);
+		border: 1px solid var(--border);
+		border-radius: 16px;
+		padding: 1.75rem;
+		text-decoration: none;
+		color: var(--text);
+		transition:
+			border-color 0.15s ease,
+			transform 0.15s ease;
+	}
+
+	.post-card:hover {
+		border-color: var(--accent);
+		transform: translateY(-2px);
+		color: var(--text);
+	}
+
+	.post-meta time {
+		font-size: 0.78rem;
+		font-weight: 600;
+		color: var(--accent);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.post-card h3 {
+		font-size: 1.1rem;
+		line-height: 1.3;
+		color: var(--text);
+	}
+
+	.post-card p {
+		font-size: 0.875rem;
+		color: var(--text-muted);
+		line-height: 1.55;
+		margin: 0;
+		flex: 1;
+	}
+
+	.read-more {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--accent);
+		margin-top: 0.5rem;
+		transition: color 0.15s ease;
+	}
+
+	.post-card:hover .read-more {
+		color: var(--accent-dark);
+	}
+</style>
