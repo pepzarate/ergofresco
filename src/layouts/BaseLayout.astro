@@ -9,14 +9,23 @@ interface Props {
     title: string;
     description: string;
     image?: ImageMetadata;
+    pubDate?: Date;
+    updatedDate?: Date;
+    isArticle?: boolean;
 }
 
-const { title, description, image } = Astro.props;
+const {
+    title,
+    description,
+    image,
+    pubDate,
+    updatedDate,
+    isArticle = false,
+} = Astro.props;
 ---
 
 <html lang="en">
     <head>
-        <!-- Anti-FOUC: apply theme before paint -->
         <script is:inline>
             (function () {
                 const theme = localStorage.getItem("theme") ?? "light";
@@ -25,7 +34,14 @@ const { title, description, image } = Astro.props;
                 }
             })();
         </script>
-        <BaseHead title={title} description={description} image={image} />
+        <BaseHead
+            title={title}
+            description={description}
+            image={image}
+            pubDate={pubDate}
+            updatedDate={updatedDate}
+            isArticle={isArticle}
+        />
     </head>
     <body>
         <Header />
