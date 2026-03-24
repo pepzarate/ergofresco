@@ -6,7 +6,7 @@ import ThemeToggle from "./ThemeToggle.astro";
 <header>
 	<nav>
 		<a href="/" class="logo" aria-label={SITE_TITLE}>
-			<span class="logo-icon">🧊</span>
+			<img src="/logo.svg" alt="ErgoFresco logo" width="32" height="32" />
 			<span class="logo-text">{SITE_TITLE}</span>
 		</a>
 
@@ -61,9 +61,10 @@ import ThemeToggle from "./ThemeToggle.astro";
 		color: var(--accent);
 	}
 
-	.logo-icon {
-		font-size: 1.4rem;
-		line-height: 1;
+	.logo img {
+		width: 32px;
+		height: 32px;
+		flex-shrink: 0;
 	}
 
 	.nav-links {
