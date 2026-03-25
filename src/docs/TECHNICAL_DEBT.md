@@ -23,7 +23,7 @@ to reflect the ErgoFresco brand before the site receives real traffic.
 
 ## TD-003 — Populate lib/utils.ts
 
-**Status:** Pending  
+**Status:** ✅ Resolved — 2026-03-24 
 **Priority:** Low  
 **Created:** 2026-03-23
 
@@ -40,7 +40,7 @@ Utility functions are currently duplicated inline across components.
 
 ## TD-004 — Populate types/index.ts
 
-**Status:** Pending  
+**Status:** ✅ Resolved — 2026-03-24
 **Priority:** Low  
 **Created:** 2026-03-23
 
@@ -74,7 +74,7 @@ Improves UX and signals content depth to readers.
 
 ## TD-006 — Structured data JSON-LD
 
-**Status:** Pending  
+**Status:** ✅ Resolved — 2026-03-24
 **Priority:** Medium  
 **Created:** 2026-03-23
 

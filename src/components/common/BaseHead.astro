@@ -58,6 +58,11 @@ const articleSchema = isArticle && pubDate ? {
   datePublished: pubDate.toISOString(),
   dateModified: (updatedDate ?? pubDate).toISOString(),
   image: image ? new URL(image.src, Astro.url).toString() : undefined,
+  author: {
+    '@type': 'Organization',
+    name: SITE_TITLE,
+    url: Astro.site?.toString(),
+  },
   publisher: {
     '@type': 'Organization',
     name: SITE_TITLE,
