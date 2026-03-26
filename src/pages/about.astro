@@ -44,6 +44,57 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 				</p>
 			</div>
 		</div>
-		</sectio
-	</section></BaseLayout
->
+	</section>
+</BaseLayout>
+
+<style>
+	.about {
+		padding: 4rem 0 6rem;
+	}
+
+	.container {
+		max-width: 780px;
+		margin: 0 auto;
+		padding: 0 1.5rem;
+	}
+
+	.page-header {
+		margin-bottom: 3rem;
+		padding-bottom: 2rem;
+	}
+
+	.page-header h1 {
+		font-size: clamp(2rem, 5vw, 3rem);
+		letter-spacing: -0.03em;
+		margin-bottom: 0.75rem;
+	}
+
+	.lead {
+		font-size: 1.1rem;
+		color: var(--text-muted);
+		line-height: 1.65;
+		margin: 0;
+	}
+
+	.prose h2 {
+		font-size: 1.4rem;
+		letter-spacing: -0.02em;
+		margin: 2.5rem 0 0.75rem;
+		padding-top: 1rem;
+	}
+
+	.prose p {
+		font-size: 1rem;
+		color: var(--text-muted);
+		line-height: 1.7;
+	}
+
+	.prose a {
+		color: var(--accent);
+		font-weight: 600;
+	}
+
+	.prose a:hover {
+		color: var(--accent-dark);
+	}
+</style>
