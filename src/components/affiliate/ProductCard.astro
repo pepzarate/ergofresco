@@ -22,8 +22,6 @@ const stars = rating ? Math.round(rating) : null;
 ---
 
 <div class="product-card">
-    {badge && <span class="product-card__badge">{badge}</span>}
-
     <div class="product-card__inner">
         {
             imageUrl && (
@@ -41,6 +39,7 @@ const stars = rating ? Math.round(rating) : null;
         }
 
         <div class="product-card__content">
+            {badge && <span class="product-card__badge">{badge}</span>}
             <div class="product-card__header">
                 <h3 class="product-card__name">{name}</h3>
                 <div class="product-card__price">{price}</div>
@@ -90,46 +89,36 @@ const stars = rating ? Math.round(rating) : null;
                     </div>
                 )
             }
-
-            href={affiliateUrl}
-            target="_blank" rel="nofollow sponsored noopener" class="product-card__cta"
-            > Check price on Amazon →
+            <a
+                href={affiliateUrl}
+                target="_blank"
+                rel="nofollow sponsored noopener"
+                class="product-card__cta"
+            >
+                Check price on Amazon →
+            </a>
         </div>
     </div>
 </div>
 
 <style>
     .product-card {
-        position: relative;
+        display: flex;
+        flex-direction: column;
         background: var(--bg-card);
         border: 1px solid var(--border);
         border-radius: 16px;
         overflow: hidden;
         margin: 2rem 0;
-        transition: border-color 0.15s ease;
+        transition:
+            border-color 0.15s ease,
+            transform 0.15s ease;
     }
 
     .product-card:hover {
         border-color: var(--accent);
     }
 
-    /* ─── Badge ───────────────────────────────────────────────── */
-    .product-card__badge {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        font-size: 0.72rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: #fff;
-        background: var(--accent);
-        padding: 3px 10px;
-        border-radius: 99px;
-        z-index: 1;
-    }
-
-    /* ─── Inner layout ────────────────────────────────────────── */
     .product-card__inner {
         display: flex;
         gap: 1.5rem;
@@ -137,7 +126,6 @@ const stars = rating ? Math.round(rating) : null;
         align-items: flex-start;
     }
 
-    /* ─── Image ───────────────────────────────────────────────── */
     .product-card__image {
         flex-shrink: 0;
         width: 160px;
@@ -155,13 +143,25 @@ const stars = rating ? Math.round(rating) : null;
         padding: 0.5rem;
     }
 
-    /* ─── Content ─────────────────────────────────────────────── */
     .product-card__content {
         flex: 1;
         min-width: 0;
         display: flex;
         flex-direction: column;
         gap: 0.6rem;
+    }
+
+    .product-card__badge {
+        display: inline-block;
+        align-self: flex-start;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #fff;
+        background: var(--accent);
+        padding: 3px 10px;
+        border-radius: 99px;
     }
 
     .product-card__header {
@@ -187,7 +187,6 @@ const stars = rating ? Math.round(rating) : null;
         flex-shrink: 0;
     }
 
-    /* ─── Rating ──────────────────────────────────────────────── */
     .product-card__rating {
         display: flex;
         align-items: center;
@@ -210,7 +209,6 @@ const stars = rating ? Math.round(rating) : null;
         margin-left: 4px;
     }
 
-    /* ─── Description ─────────────────────────────────────────── */
     .product-card__description {
         font-size: 0.9rem;
         color: var(--text-muted);
@@ -218,7 +216,6 @@ const stars = rating ? Math.round(rating) : null;
         margin: 0;
     }
 
-    /* ─── Pros / Cons ─────────────────────────────────────────── */
     .product-card__lists {
         display: flex;
         gap: 1.5rem;
@@ -268,7 +265,6 @@ const stars = rating ? Math.round(rating) : null;
         color: var(--text-muted);
     }
 
-    /* ─── CTA ─────────────────────────────────────────────────── */
     .product-card__cta {
         display: inline-block;
         margin-top: 0.25rem;
@@ -291,7 +287,6 @@ const stars = rating ? Math.round(rating) : null;
         transform: translateY(-1px);
     }
 
-    /* ─── Responsive ──────────────────────────────────────────── */
     @media (max-width: 600px) {
         .product-card__inner {
             flex-direction: column;
