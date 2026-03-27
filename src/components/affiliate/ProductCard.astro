@@ -1,0 +1,310 @@
+---
+import type { Product } from "../../types/index";
+
+interface Props {
+    product: Product;
+}
+
+const { product } = Astro.props;
+const {
+    name,
+    description,
+    price,
+    affiliateUrl,
+    imageUrl,
+    rating,
+    pros,
+    cons,
+    badge,
+} = product;
+
+const stars = rating ? Math.round(rating) : null;
+---
+
+<div class="product-card">
+    {badge && <span class="product-card__badge">{badge}</span>}
+
+    <div class="product-card__inner">
+        {
+            imageUrl && (
+                <div class="product-card__image">
+                    <img
+                        src={imageUrl}
+                        alt={name}
+                        width={200}
+                        height={200}
+                        loading="lazy"
+                        decoding="async"
+                    />
+                </div>
+            )
+        }
+
+        <div class="product-card__content">
+            <div class="product-card__header">
+                <h3 class="product-card__name">{name}</h3>
+                <div class="product-card__price">{price}</div>
+            </div>
+
+            {
+                stars && (
+                    <div
+                        class="product-card__rating"
+                        aria-label={`Rating: ${rating} out of 5`}
+                    >
+                        {Array.from({ length: 5 }).map((_, i) => (
+                            <span
+                                class:list={[
+                                    "star",
+                                    { "star--filled": i < stars },
+                                ]}
+                                aria-hidden="true"
+                            >
+                                ★
+                            </span>
+                        ))}
+                        {rating && <span class="rating-value">{rating}/5</span>}
+                    </div>
+                )
+            }
+
+            <p class="product-card__description">{description}</p>
+
+            {
+                (pros || cons) && (
+                    <div class="product-card__lists">
+                        {pros && pros.length > 0 && (
+                            <ul class="pros-list">
+                                {pros.map((pro) => (
+                                    <li>{pro}</li>
+                                ))}
+                            </ul>
+                        )}
+                        {cons && cons.length > 0 && (
+                            <ul class="cons-list">
+                                {cons.map((con) => (
+                                    <li>{con}</li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                )
+            }
+
+            href={affiliateUrl}
+            target="_blank" rel="nofollow sponsored noopener" class="product-card__cta"
+            > Check price on Amazon →
+        </div>
+    </div>
+</div>
+
+<style>
+    .product-card {
+        position: relative;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        margin: 2rem 0;
+        transition: border-color 0.15s ease;
+    }
+
+    .product-card:hover {
+        border-color: var(--accent);
+    }
+
+    /* ─── Badge ───────────────────────────────────────────────── */
+    .product-card__badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #fff;
+        background: var(--accent);
+        padding: 3px 10px;
+        border-radius: 99px;
+        z-index: 1;
+    }
+
+    /* ─── Inner layout ────────────────────────────────────────── */
+    .product-card__inner {
+        display: flex;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        align-items: flex-start;
+    }
+
+    /* ─── Image ───────────────────────────────────────────────── */
+    .product-card__image {
+        flex-shrink: 0;
+        width: 160px;
+        height: 160px;
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--bg-subtle);
+        border: 1px solid var(--border);
+    }
+
+    .product-card__image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 0.5rem;
+    }
+
+    /* ─── Content ─────────────────────────────────────────────── */
+    .product-card__content {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .product-card__header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .product-card__name {
+        font-size: 1.15rem;
+        line-height: 1.3;
+        color: var(--text);
+        margin: 0;
+    }
+
+    .product-card__price {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent);
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* ─── Rating ──────────────────────────────────────────────── */
+    .product-card__rating {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .star {
+        font-size: 1rem;
+        color: var(--border);
+        line-height: 1;
+    }
+
+    .star--filled {
+        color: #f59e0b;
+    }
+
+    .rating-value {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-left: 4px;
+    }
+
+    /* ─── Description ─────────────────────────────────────────── */
+    .product-card__description {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* ─── Pros / Cons ─────────────────────────────────────────── */
+    .product-card__lists {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .pros-list,
+    .cons-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .pros-list li,
+    .cons-list li {
+        font-size: 0.82rem;
+        line-height: 1.4;
+        padding-left: 1.2rem;
+        position: relative;
+    }
+
+    .pros-list li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: 700;
+    }
+
+    .cons-list li::before {
+        content: "✗";
+        position: absolute;
+        left: 0;
+        color: #ef4444;
+        font-weight: 700;
+    }
+
+    .pros-list li {
+        color: var(--text);
+    }
+    .cons-list li {
+        color: var(--text-muted);
+    }
+
+    /* ─── CTA ─────────────────────────────────────────────────── */
+    .product-card__cta {
+        display: inline-block;
+        margin-top: 0.25rem;
+        background: var(--accent);
+        color: #fff;
+        font-size: 0.875rem;
+        font-weight: 600;
+        padding: 0.6rem 1.25rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition:
+            background 0.15s ease,
+            transform 0.1s ease;
+        align-self: flex-start;
+    }
+
+    .product-card__cta:hover {
+        background: var(--accent-dark);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    /* ─── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 600px) {
+        .product-card__inner {
+            flex-direction: column;
+        }
+
+        .product-card__image {
+            width: 100%;
+            height: 200px;
+        }
+
+        .product-card__header {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+    }
+</style>
