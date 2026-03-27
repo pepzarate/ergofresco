@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostGrid from "../../components/blog/PostGrid.astro";
 
 const allPosts: CollectionEntry<"blog">[] = (await getCollection("blog")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -14,7 +15,6 @@ const allPosts: CollectionEntry<"blog">[] = (await getCollection("blog")).sort(
 >
 	<section class="blog-index">
 		<div class="container">
-			<!-- Header -->
 			<div class="page-header">
 				<h1>Articles</h1>
 				<p>
@@ -23,7 +23,6 @@ const allPosts: CollectionEntry<"blog">[] = (await getCollection("blog")).sort(
 				</p>
 			</div>
 
-			<!-- Posts -->
 			{
 				allPosts.length === 0 ? (
 					<div class="empty-state">
@@ -31,33 +30,11 @@ const allPosts: CollectionEntry<"blog">[] = (await getCollection("blog")).sort(
 						<p>Articles coming soon. Check back shortly.</p>
 					</div>
 				) : (
-					<ul class="posts-list">
-						{allPosts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`} class="post-item">
-									<div class="post-info">
-										<time
-											datetime={post.data.pubDate.toISOString()}
-										>
-											{post.data.pubDate.toLocaleDateString(
-												"en-US",
-												{
-													year: "numeric",
-													month: "short",
-													day: "numeric",
-												},
-											)}
-										</time>
-										<h2>{post.data.title}</h2>
-										<p>{post.data.description}</p>
-									</div>
-									<span class="arrow" aria-hidden="true">
-										→
-									</span>
-								</a>
-							</li>
-						))}
-					</ul>
+					<PostGrid
+						posts={allPosts}
+						columns={3}
+						featuredFirst={true}
+					/>
 				)
 			}
 		</div>
@@ -70,12 +47,11 @@ const allPosts: CollectionEntry<"blog">[] = (await getCollection("blog")).sort(
 	}
 
 	.container {
-		max-width: 780px;
+		max-width: 1100px;
 		margin: 0 auto;
 		padding: 0 1.5rem;
 	}
 
-	/* ─── Page Header ─────────────────────────────────────────── */
 	.page-header {
 		margin-bottom: 3rem;
 		padding-bottom: 2rem;
@@ -94,7 +70,6 @@ const allPosts: CollectionEntry<"blog">[] = (await getCollection("blog")).sort(
 		margin: 0;
 	}
 
-	/* ─── Empty State ─────────────────────────────────────────── */
 	.empty-state {
 		text-align: center;
 		padding: 4rem 0;
@@ -105,98 +80,5 @@ const allPosts: CollectionEntry<"blog">[] = (await getCollection("blog")).sort(
 		font-size: 2.5rem;
 		display: block;
 		margin-bottom: 1rem;
-	}
-
-	.empty-state p {
-		font-size: 1rem;
-		color: var(--text-muted);
-	}
-
-	/* ─── Posts List ──────────────────────────────────────────── */
-	.posts-list {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 0;
-	}
-
-	.post-item {
-		display: flex;
-		align-items: center;
-		gap: 1.5rem;
-		padding: 1.75rem 0;
-		border-bottom: 1px solid var(--border);
-		text-decoration: none;
-		color: var(--text);
-		transition: color 0.15s ease;
-	}
-
-	.post-item:hover {
-		color: var(--text);
-	}
-
-	.post-item:hover h2 {
-		color: var(--accent);
-	}
-
-	.post-item:hover .arrow {
-		transform: translateX(4px);
-		color: var(--accent);
-	}
-
-	.post-info {
-		flex: 1;
-		min-width: 0;
-	}
-
-	.post-info time {
-		display: block;
-		font-size: 0.78rem;
-		font-weight: 600;
-		color: var(--accent);
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		margin-bottom: 0.4rem;
-	}
-
-	.post-info h2 {
-		font-size: 1.2rem;
-		line-height: 1.3;
-		margin-bottom: 0.4rem;
-		color: var(--text);
-		transition: color 0.15s ease;
-		/* Prevent overflow on long titles */
-		overflow: hidden;
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-	}
-
-	.post-info p {
-		font-size: 0.875rem;
-		color: var(--text-muted);
-		margin: 0;
-		line-height: 1.5;
-		overflow: hidden;
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-	}
-
-	.arrow {
-		font-size: 1.2rem;
-		color: var(--text-muted);
-		flex-shrink: 0;
-		transition:
-			transform 0.15s ease,
-			color 0.15s ease;
-	}
-
-	@media (max-width: 480px) {
-		.arrow {
-			display: none;
-		}
 	}
 </style>

@@ -1,0 +1,75 @@
+---
+import type { Post } from "../../types/index";
+import PostCard from "./PostCard.astro";
+
+interface Props {
+    posts: Post[];
+    columns?: 2 | 3;
+    featuredFirst?: boolean;
+}
+
+const { posts, columns = 3, featuredFirst = false } = Astro.props;
+
+const featured = featuredFirst ? posts[0] : null;
+const rest = featuredFirst ? posts.slice(1) : posts;
+---
+
+<div class="post-grid-wrapper">
+    {
+        featured && (
+            <div class="post-grid__featured">
+                <PostCard post={featured} variant="featured" />
+            </div>
+        )
+    }
+
+    {
+        rest.length > 0 && (
+            <div class:list={["post-grid", `post-grid--cols-${columns}`]}>
+                {rest.map((post) => (
+                    <PostCard post={post} />
+                ))}
+            </div>
+        )
+    }
+</div>
+
+<style>
+    .post-grid-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    /* ─── Featured ────────────────────────────────────────────── */
+    .post-grid__featured {
+        width: 100%;
+    }
+
+    /* ─── Grid ────────────────────────────────────────────────── */
+    .post-grid {
+        display: grid;
+        gap: 1.25rem;
+    }
+
+    .post-grid--cols-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .post-grid--cols-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 900px) {
+        .post-grid--cols-3 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 580px) {
+        .post-grid--cols-2,
+        .post-grid--cols-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
