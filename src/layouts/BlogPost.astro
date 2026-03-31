@@ -1,12 +1,15 @@
 ---
 import { Image } from "astro:assets";
-import type { CollectionEntry } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import FormattedDate from "../components/common/FormattedDate.astro";
+import RelatedArticles from "../components/blog/RelatedArticles.astro";
 
-type Props = CollectionEntry<"blog">["data"];
+type Props = CollectionEntry<"blog">["data"] & { id: string };
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { id, title, description, pubDate, updatedDate, heroImage } = Astro.props;
+
+const allPosts = await getCollection("blog");
 ---
 
 <BaseLayout
@@ -75,6 +78,8 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 					<a href="/blog" class="back-link">← Back to all articles</a>
 				</div>
 			</footer>
+			<!-- ─── Related Articles ──────────────────────────────── -->
+			<RelatedArticles currentId={id} posts={allPosts} />
 		</div>
 	</article>
 </BaseLayout>
