@@ -57,7 +57,7 @@ undefined, which means no type safety on affiliate and product data.
 
 ## TD-005 — Reading time via remark plugin
 
-**Status:** Pending  
+**Status:** ✅ Resolved — 2026-03-31
 **Priority:** Low  
 **Created:** 2026-03-23
 
