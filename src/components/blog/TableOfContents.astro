@@ -1,0 +1,165 @@
+---
+interface Heading {
+    depth: number;
+    slug: string;
+    text: string;
+}
+
+interface Props {
+    headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+const filtered = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+    filtered.length > 2 && (
+        <details class="toc">
+            <summary class="toc__trigger">
+                <span class="toc__label">
+                    <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="15" y2="18" />
+                    </svg>
+                    Table of contents
+                </span>
+                <span class="toc__chevron" aria-hidden="true">
+                    ▾
+                </span>
+            </summary>
+
+            <nav class="toc__nav" aria-label="Table of contents">
+                <ol class="toc__list">
+                    {filtered.map((heading) => (
+                        <li
+                            class:list={[
+                                "toc__item",
+                                { "toc__item--h3": heading.depth === 3 },
+                            ]}
+                        >
+                            <a href={`#${heading.slug}`} class="toc__link">
+                                {heading.text}
+                            </a>
+                        </li>
+                    ))}
+                </ol>
+            </nav>
+        </details>
+    )
+}
+
+<style>
+    .toc {
+        background: var(--bg-subtle);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin: 0 0 2rem;
+        overflow: hidden;
+    }
+
+    .toc[open] .toc__chevron {
+        transform: rotate(180deg);
+    }
+
+    /* ─── Trigger ─────────────────────────────────────────────── */
+    .toc__trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.875rem 1.25rem;
+        cursor: pointer;
+        list-style: none;
+        user-select: none;
+        transition: background 0.15s ease;
+    }
+
+    .toc__trigger::-webkit-details-marker {
+        display: none;
+    }
+
+    .toc__trigger:hover {
+        background: var(--bg-card);
+    }
+
+    .toc__label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .toc__label svg {
+        color: var(--accent);
+        flex-shrink: 0;
+    }
+
+    .toc__chevron {
+        font-size: 12px;
+        color: var(--text-muted);
+        transition: transform 0.2s ease;
+    }
+
+    /* ─── Nav ─────────────────────────────────────────────────── */
+    .toc__nav {
+        border-top: 1px solid var(--border);
+        padding: 0.875rem 1.25rem;
+    }
+
+    .toc__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+        counter-reset: toc-counter;
+    }
+
+    .toc__item {
+        counter-increment: toc-counter;
+    }
+
+    .toc__link {
+        display: block;
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 0.3rem 0;
+        line-height: 1.4;
+        transition: color 0.15s ease;
+        border-radius: 4px;
+    }
+
+    .toc__link:hover {
+        color: var(--accent);
+    }
+
+    /* H3 indented */
+    .toc__item--h3 .toc__link {
+        padding-left: 1.25rem;
+        font-size: 0.825rem;
+        position: relative;
+    }
+
+    .toc__item--h3 .toc__link::before {
+        content: "–";
+        position: absolute;
+        left: 0.35rem;
+        color: var(--border);
+    }
+</style>

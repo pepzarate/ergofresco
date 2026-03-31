@@ -1,0 +1,86 @@
+---
+interface BreadcrumbItem {
+    label: string;
+    href?: string;
+}
+
+interface Props {
+    items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol class="breadcrumb__list">
+        {
+            items.map((item, index) => (
+                <li class="breadcrumb__item">
+                    {item.href && index < items.length - 1 ? (
+                        <a href={item.href} class="breadcrumb__link">
+                            {item.label}
+                        </a>
+                    ) : (
+                        <span class="breadcrumb__current" aria-current="page">
+                            {item.label}
+                        </span>
+                    )}
+                    {index < items.length - 1 && (
+                        <span class="breadcrumb__sep" aria-hidden="true">
+                            ›
+                        </span>
+                    )}
+                </li>
+            ))
+        }
+    </ol>
+</nav>
+
+<style>
+    .breadcrumb {
+        margin-bottom: 1rem;
+    }
+
+    .breadcrumb__list {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .breadcrumb__item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .breadcrumb__link {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.15s ease;
+    }
+
+    .breadcrumb__link:hover {
+        color: var(--accent);
+    }
+
+    .breadcrumb__sep {
+        font-size: 0.8rem;
+        color: var(--border);
+    }
+
+    .breadcrumb__current {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        font-weight: 400;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
+</style>

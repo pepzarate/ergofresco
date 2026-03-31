@@ -1,13 +1,30 @@
 ---
 import { Image } from "astro:assets";
 import { getCollection, type CollectionEntry } from "astro:content";
+import type { MarkdownHeading } from "astro";
 import BaseLayout from "./BaseLayout.astro";
 import FormattedDate from "../components/common/FormattedDate.astro";
 import RelatedArticles from "../components/blog/RelatedArticles.astro";
+import TableOfContents from "../components/blog/TableOfContents.astro";
+import Breadcrumb from "../components/blog/Breadcrumb.astro";
+import ScrollToTop from "../components/common/ScrollToTop.astro";
 
-type Props = CollectionEntry<"blog">["data"] & { id: string };
+type Props = CollectionEntry<"blog">["data"] & {
+	id: string;
+	headings: MarkdownHeading[];
+	readingTime: number;
+};
 
-const { id, title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const {
+	id,
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	headings,
+	readingTime,
+} = Astro.props;
 
 const allPosts = await getCollection("blog");
 ---
@@ -39,6 +56,13 @@ const allPosts = await getCollection("blog");
 
 		<!-- ─── Article Header ─────────────────────────────────── -->
 		<div class="container">
+			<Breadcrumb
+				items={[
+					{ label: "Home", href: "/" },
+					{ label: "Articles", href: "/blog" },
+					{ label: title },
+				]}
+			/>
 			<header class="article-header">
 				<div class="article-meta">
 					<FormattedDate date={pubDate} />
@@ -49,11 +73,15 @@ const allPosts = await getCollection("blog");
 							</span>
 						)
 					}
+					<span class="reading-time">· {readingTime} min read</span>
 				</div>
 				<h1>{title}</h1>
 				<p class="article-description">{description}</p>
 				<hr class="divider" />
 			</header>
+
+			<!-- ─── Table of Contents ─────────────────────────────────── -->
+			<TableOfContents headings={headings} />
 
 			<!-- ─── Affiliate Disclaimer ──────────────────────────── -->
 			<aside class="affiliate-notice">
@@ -81,6 +109,7 @@ const allPosts = await getCollection("blog");
 			<!-- ─── Related Articles ──────────────────────────────── -->
 			<RelatedArticles currentId={id} posts={allPosts} />
 		</div>
+		<ScrollToTop />
 	</article>
 </BaseLayout>
 
@@ -191,5 +220,9 @@ const allPosts = await getCollection("blog");
 		color: var(--text-muted);
 		margin: 0;
 		line-height: 1.5;
+	}
+	.reading-time {
+		color: var(--text-muted);
+		font-weight: 500;
 	}
 </style>
