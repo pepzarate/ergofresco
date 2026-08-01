@@ -12,7 +12,7 @@ import ScrollToTop from "../components/common/ScrollToTop.astro";
 type Props = CollectionEntry<"blog">["data"] & {
 	id: string;
 	headings: MarkdownHeading[];
-	readingTime: number;
+	readingTime: string;
 };
 
 const {
@@ -73,7 +73,7 @@ const allPosts = await getCollection("blog");
 							</span>
 						)
 					}
-					<span class="reading-time">· {readingTime} min read</span>
+					<span class="reading-time">· {readingTime}</span>
 				</div>
 				<h1>{title}</h1>
 				<p class="article-description">{description}</p>

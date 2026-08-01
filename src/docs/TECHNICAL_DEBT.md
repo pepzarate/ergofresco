@@ -57,18 +57,25 @@ undefined, which means no type safety on affiliate and product data.
 
 ## TD-005 — Reading time via remark plugin
 
-**Status:** ✅ Resolved — 2026-03-31
+**Status:** ✅ Resolved — 2026-08-01
 **Priority:** Low  
 **Created:** 2026-03-23
 
 ### Context
-Article layout has a placeholder for reading time that was never implemented.
-Improves UX and signals content depth to readers.
+Reading time was computed inline in `src/pages/blog/[...slug].astro` from
+word count (`Math.round(wordCount / 200)`). Replaced with a custom remark
+plugin for accuracy (uses the `reading-time` package's word/image/code-block
+aware algorithm instead of a flat word count) and to remove the calculation
+from the page component.
 
-### Scope
-- Install `remark-reading-time` or implement custom remark plugin
-- Expose reading time in article frontmatter
-- Display in `BlogPost.astro` article header
+### Implementation
+- `src/lib/remark-reading-time.mjs` — custom remark plugin using
+  `reading-time` + `mdast-util-to-string`, writes `minutesRead` into
+  `file.data.astro.frontmatter`
+- Registered in `astro.config.mjs` via `markdown.remarkPlugins`
+- `src/pages/blog/[...slug].astro` reads `remarkPluginFrontmatter.minutesRead`
+  from `render(post)` and passes it to `BlogPost.astro` as `readingTime`
+  (now a formatted string, e.g. `"3 min read"`, not a number)
 
 ---
 
